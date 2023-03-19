@@ -6,4 +6,13 @@
     {{ form }}
     <button type="submit" class="btn btn-primary">Upload File</button>
 </form>
+
+{% if files %}
+<h1>Результат</h1>
+
+{% for file in files %}
+<img src="{{file}}" alt="{{file}}">
+{% endfor %}
+
+{% endif %}
 {% endblock content %}

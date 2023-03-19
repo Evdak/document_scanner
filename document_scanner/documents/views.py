@@ -14,4 +14,7 @@ def upload_file(request):
     else:
         form = FileUpload()
 
-    return render(request, 'upload_file.html', {'form': form})
+    if files:
+        files = [f'/media/upload_files/{el}' for el in files]
+
+    return render(request, 'upload_file.html', {'form': form, 'files': files})
