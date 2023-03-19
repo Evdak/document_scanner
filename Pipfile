@@ -9,6 +9,8 @@ gunicorn = "*"
 psycopg2-binary = "*"
 gevent = "*"
 django-environ = "*"
+django-crispy-forms = "*"
+crispy-bootstrap5 = "*"
 
 [dev-packages]
 
