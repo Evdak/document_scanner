@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import FileUpload
 from .models import UploadFiles
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def upload_file(request):
     files = None
     if request.method == "POST":
