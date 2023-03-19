@@ -4,6 +4,7 @@ from .models import UploadFiles
 
 
 def upload_file(request):
+    files = None
     if request.method == "POST":
         form = FileUpload(request.POST, request.FILES)
         files = request.FILES.getlist('files')
