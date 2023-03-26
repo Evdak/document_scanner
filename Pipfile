@@ -11,6 +11,10 @@ gevent = "*"
 django-environ = "*"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
+scikit-image = "*"
+imutils = "*"
+numpy = "*"
+opencv-python = "*"
 
 [dev-packages]
 
