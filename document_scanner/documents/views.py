@@ -23,14 +23,18 @@ def upload_file(request):
 
             res[0].upload_file.files.url
 
+        res = [
+            {
+                "original": str(el.upload_file.files.url),
+                "scan_png": str(el.scan_png.url),
+                "scan_pdf": str(el.scan_pdf.url)
+            } for el in res
+        ]
+        import logging
+        logging.warning(res)
+
         return JsonResponse(
-            [
-                {
-                    "original": str(el.upload_file.files.url),
-                    "scan_png": str(el.scan_png.url),
-                    "scan_pdf": str(el.scan_pdf.url)
-                } for el in res
-            ]
+            res
         )
     return redirect('main')
 
