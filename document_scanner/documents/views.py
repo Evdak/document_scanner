@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from documents.helpers import convert_image
+from documents.helpers import convert_image, predict
 from .forms import FileUpload
 from .models import ResultFiles, UploadFiles
 from django.views.decorators.csrf import csrf_exempt
@@ -20,8 +20,6 @@ def upload_file(request):
                 file_instance = UploadFiles(files=f)
                 file_instance.save()
                 res.append(convert_image(file_instance))
-
-            res[0].upload_file.files.url
 
         res = [
             {
@@ -51,4 +49,6 @@ def main(request):
                 file_instance = UploadFiles(files=f)
                 file_instance.save()
                 res.append(convert_image(file_instance))
-    return render(request, 'upload_file.html', {'form': form, 'files': UploadFiles.objects.all()})
+                file_instance.type = predict(file=file_instance.files.path)
+                file_instance.save()
+    return render(request, 'upload_file.html', {'form': form, 'files': UploadFiles.objects.all()[::-1]})

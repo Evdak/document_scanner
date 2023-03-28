@@ -8,6 +8,18 @@ class UploadFiles(models.Model):
         null=True
     )
 
+    type = models.CharField(
+        'Тип документа',
+        max_length=255,
+        choices=(
+            ('Документ', 'Документ'),
+            ('МК', 'МК'),
+            ('Виза', 'Виза'),
+        ),
+        null=True,
+        blank=True,
+    )
+
 
 class ResultFiles(models.Model):
     upload_file = models.OneToOneField(

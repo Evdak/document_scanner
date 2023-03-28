@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 django = "*"
 gunicorn = "*"
-psycopg2-binary = "*"
+psycopg2 = "*"
 gevent = "*"
 django-environ = "*"
 django-crispy-forms = "*"
@@ -15,8 +15,9 @@ scikit-image = "*"
 imutils = "*"
 numpy = "*"
 opencv-python = "*"
+tensorflow = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.9"

@@ -109,3 +109,4 @@ database.db
 .DS_Store
 
 /data
+/document_scanner/media

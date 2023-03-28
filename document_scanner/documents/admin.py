@@ -6,6 +6,7 @@ from . import models
 class UploadFilesAdmin(admin.ModelAdmin):
     list_display = (
         'files',
+        'type',
     )
 
     list_filter = list_display

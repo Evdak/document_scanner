@@ -1,10 +1,12 @@
+from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
 from skimage.filters import threshold_local
 from PIL import Image
 import imutils
 import numpy as np
 import cv2
 from documents.models import ResultFiles, UploadFiles
-from document_scanner.settings import MEDIA_ROOT
+from document_scanner.settings import MEDIA_ROOT, BASE_DIR
 from django.core.files import File
 
 
@@ -78,6 +80,7 @@ def convert_image(image: UploadFiles) -> ResultFiles:
 
     cnts, _ = cv2.findContours(edged_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
+    doc = None
     for c in cnts:
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.02 * peri, True)
@@ -86,6 +89,8 @@ def convert_image(image: UploadFiles) -> ResultFiles:
             break
 
     p = []
+    if doc is None:
+        return None
     for d in doc:
         tuple_point = tuple(d[0])
         cv2.circle(img_resize, tuple_point, 3, (0, 0, 255), 4)
@@ -115,3 +120,20 @@ def convert_image(image: UploadFiles) -> ResultFiles:
     res.save()
 
     return res
+
+
+ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
+IMAGE_SIZE = (224, 224)
+UPLOAD_FOLDER = 'uploads'
+vgg16 = load_model(BASE_DIR / "documents_workflow2.h5")
+
+
+def predict(file):
+    img = load_img(file, target_size=IMAGE_SIZE)
+    img = img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    probs = vgg16.predict(img)[0]
+    labels = ['Документ', 'МК', 'Виза']
+    label_num = np.argmax(probs, axis=0)
+    output = labels[label_num]
+    return output
