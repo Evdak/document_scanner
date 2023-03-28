@@ -26,9 +26,9 @@ def upload_file(request):
         return JsonResponse(
             [
                 {
-                    "original": el.upload_file.files.url,
-                    "scan_png": el.scan_png.url,
-                    "scan_pdf": el.scan_pdf.url,
+                    "original": str(el.upload_file.files.url),
+                    "scan_png": str(el.scan_png.url),
+                    "scan_pdf": str(el.scan_pdf.url)
                 } for el in res
             ]
         )
