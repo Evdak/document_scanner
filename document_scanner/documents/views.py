@@ -34,7 +34,7 @@ def upload_file(request):
         logging.warning(res)
 
         return JsonResponse(
-            res
+            {"result": res}
         )
     return redirect('main')
 
