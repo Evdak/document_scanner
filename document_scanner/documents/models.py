@@ -1,7 +1,17 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 class UploadFiles(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь"
+    )
+
     files = models.FileField(
         upload_to='upload_files/',
         blank=True,

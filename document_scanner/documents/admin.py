@@ -5,6 +5,7 @@ from . import models
 @admin.register(models.UploadFiles)
 class UploadFilesAdmin(admin.ModelAdmin):
     list_display = (
+        'user',
         'files',
         'type',
     )

@@ -1,15 +1,20 @@
+from django.http import HttpRequest, HttpResponse
+
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
 from documents.helpers import convert_image, predict
 from .forms import FileUpload
 from .models import ResultFiles, UploadFiles
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 import logging
 
 
 @csrf_exempt
-def upload_file(request):
+@login_required
+def upload_file(request: HttpRequest):
     files = None
     if request.method == "POST":
         form = FileUpload(request.POST, request.FILES)
@@ -18,6 +23,7 @@ def upload_file(request):
             res: list[ResultFiles] = []
             for f in files:
                 file_instance = UploadFiles(files=f)
+                file_instance.user = request.user
                 file_instance.save()
                 res.append(convert_image(file_instance))
 
@@ -38,7 +44,8 @@ def upload_file(request):
 
 
 @csrf_exempt
-def main(request):
+@login_required
+def main(request: HttpRequest):
     form = FileUpload()
     if request.method == "POST":
         form = FileUpload(request.POST, request.FILES)
@@ -47,8 +54,9 @@ def main(request):
             res: list[ResultFiles] = []
             for f in files:
                 file_instance = UploadFiles(files=f)
+                file_instance.user = request.user
                 file_instance.save()
                 res.append(convert_image(file_instance))
                 file_instance.type = predict(file=file_instance.files.path)
                 file_instance.save()
-    return render(request, 'upload_file.html', {'form': form, 'files': UploadFiles.objects.all()[::-1]})
+    return render(request, 'upload_file.html', {'form': form, 'files': UploadFiles.objects.filter(user=request.user).all()[::-1]})
