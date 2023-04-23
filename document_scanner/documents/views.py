@@ -19,19 +19,23 @@ def upload_file(request: HttpRequest):
     if request.method == "POST":
         form = FileUpload(request.POST, request.FILES)
         files = request.FILES.getlist('files')
+        res: list[ResultFiles] = []
         if form.is_valid():
-            res: list[ResultFiles] = []
+
             for f in files:
                 file_instance = UploadFiles(files=f)
                 file_instance.user = request.user
                 file_instance.save()
                 res.append(convert_image(file_instance))
+                file_instance.type = predict(file=file_instance.files.path)
+                file_instance.save()
 
         res = [
             {
                 "original": str(el.upload_file.files.url),
                 "scan_png": str(el.scan_png.url),
-                "scan_pdf": str(el.scan_pdf.url)
+                "scan_pdf": str(el.scan_pdf.url),
+                "type": str(el.upload_file.type)
             } for el in res
         ]
         import logging
