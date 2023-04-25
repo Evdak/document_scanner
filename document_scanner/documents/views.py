@@ -68,7 +68,7 @@ def main(request: HttpRequest):
 
 @login_required
 def my_uploads(request: HttpRequest):
-    res: list[ResultFiles] = ResultFiles.objects.filter(user=request.user).all()[::-1]
+    res: list[ResultFiles] = ResultFiles.objects.filter(upload_file__user=request.user).all()[::-1]
     res = [
         {
             "original": str(el.upload_file.files.url),
