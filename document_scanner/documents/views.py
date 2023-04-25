@@ -64,3 +64,20 @@ def main(request: HttpRequest):
                 file_instance.type = predict(file=file_instance.files.path)
                 file_instance.save()
     return render(request, 'upload_file.html', {'form': form, 'files': UploadFiles.objects.filter(user=request.user).all()[::-1]})
+
+
+@login_required
+def my_uploads(request: HttpRequest):
+    res: list[ResultFiles] = ResultFiles.objects.filter(user=request.user).all()[::-1]
+    res = [
+        {
+            "original": str(el.upload_file.files.url),
+            "scan_png": str(el.scan_png.url),
+            "scan_pdf": str(el.scan_pdf.url),
+            "type": str(el.upload_file.type)
+        } for el in res
+    ]
+
+    return JsonResponse(
+        {"result": res}
+    )
