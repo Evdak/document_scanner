@@ -22,9 +22,8 @@ class MultipleFileField(forms.FileField):
 
 
 class FileUpload(forms.ModelForm):
+    files_upload = MultipleFileField()
+
     class Meta:
         model = UploadFiles
-        fields = ["files"]
-        widgets = {
-            "files": MultipleFileField(),
-        }
+        fields = []
