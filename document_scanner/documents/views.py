@@ -72,18 +72,37 @@ def main(request: HttpRequest):
     )
 
 
+def get_result_files(data: dict, el: UploadFiles):
+    scan = {
+        "scan_png": "",
+        "scan_pdf": "",
+    }
+    try:
+        scan["scan_png"] = str(el.resultfiles.scan_png.url)
+        scan["scan_pdf"] = str(el.resultfiles.scan_pdf.url)
+
+    except UploadFiles.resultfiles.RelatedObjectDoesNotExist:
+        pass
+
+    data.update(scan)
+
+    return data
+
+
 @login_required
 def my_uploads(request: HttpRequest):
-    res: list[ResultFiles] = ResultFiles.objects.filter(
-        upload_file__user=request.user
+    res: list[UploadFiles] = UploadFiles.objects.filter(
+        user=request.user
     ).all()[::-1]
+
     res = [
-        {
-            "original": str(el.upload_file.files.url),
-            "scan_png": str(el.scan_png.url),
-            "scan_pdf": str(el.scan_pdf.url),
-            "type": str(el.upload_file.type),
-        }
+        get_result_files(
+            {
+                "original": str(el.files.url),
+                "type": str(el.type),
+            },
+            el,
+        )
         for el in res
     ]
 
