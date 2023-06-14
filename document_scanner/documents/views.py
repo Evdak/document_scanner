@@ -38,7 +38,6 @@ def upload_file(request: HttpRequest):
             }
             for el in res
         ]
-        import logging
 
         logging.warning(res)
 
